@@ -1,0 +1,798 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<title>-01_1_01_J10C</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background:#000; margin:0; overflow:hidden; width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; }
+  #container { position:relative; width:1920px; height:1080px; transform-origin:center; flex-shrink:0; overflow:hidden; isolation: isolate; background: #000; }
+  .blend-wrapper { position: absolute; left:0; top:0; width:100%; height:100%; transform-origin:center; pointer-events:none; }
+  .layer { position:absolute; left:0; top:0; transform-origin:center; pointer-events:none; -webkit-user-drag: none; opacity: 0; }
+  .layer[data-link] { cursor: pointer; pointer-events: auto; transition: filter 0.2s ease, transform 0.1s ease; }
+  .layer[data-link]:hover { filter: brightness(1.2) drop-shadow(0 0 10px rgba(0,255,255,0.4)); }
+  .layer[data-link]:active { filter: brightness(0.8); transform: translate(0, 1px); }
+  .lottie-container { width:100%; height:100%; position:absolute; top:0; left:0; z-index: 1; }
+  .lottie-wrapper { position: absolute; width: 100%; height: 100%; }
+  .pag-canvas { display: block; }
+  .file-error { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; background: rgba(255,0,0,0.7); padding: 10px; border-radius: 5px; text-align: center; font-size: 12px; max-width: 90%; z-index: 1000; }
+  .file-error h4 { margin: 0 0 5px 0; font-size: 14px; }
+  .file-error p { margin: 3px 0; }
+  .load-status { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; z-index: 10000; }
+  /* 混合模式支持 - 修复版 */
+  .blend-wrapper[data-blend-mode='normal'] { mix-blend-mode: normal; }
+  .blend-wrapper[data-blend-mode='multiply'] { mix-blend-mode: multiply; }
+  .blend-wrapper[data-blend-mode='screen'] { mix-blend-mode: screen; }
+  .blend-wrapper[data-blend-mode='overlay'] { mix-blend-mode: overlay; }
+  .blend-wrapper[data-blend-mode='soft-light'] { mix-blend-mode: soft-light; }
+  .blend-wrapper[data-blend-mode='hard-light'] { mix-blend-mode: hard-light; }
+  .blend-wrapper[data-blend-mode='color-dodge'] { mix-blend-mode: color-dodge; }
+  .blend-wrapper[data-blend-mode='color-burn'] { mix-blend-mode: color-burn; }
+  .blend-wrapper[data-blend-mode='darken'] { mix-blend-mode: darken; }
+  .blend-wrapper[data-blend-mode='lighten'] { mix-blend-mode: lighten; }
+  .blend-wrapper[data-blend-mode='difference'] { mix-blend-mode: difference; }
+  .blend-wrapper[data-blend-mode='exclusion'] { mix-blend-mode: exclusion; }
+  .blend-wrapper[data-blend-mode='hue'] { mix-blend-mode: hue; }
+  .blend-wrapper[data-blend-mode='saturation'] { mix-blend-mode: saturation; }
+  .blend-wrapper[data-blend-mode='color'] { mix-blend-mode: color; }
+  .blend-wrapper[data-blend-mode='luminosity'] { mix-blend-mode: luminosity; }
+  .blend-wrapper[data-blend-mode='plus'] {
+    mix-blend-mode: plus-lighter;
+    /* 备选方案，如果浏览器不支持plus-lighter */
+    background-blend-mode: lighten;
+  }
+@keyframes anim_1 {
+  0.00% { transform: translate(-50%, -50%) translate(-258px,379.8px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  6.90% { transform: translate(-50%, -50%) translate(236.4px,379.8px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(236.4px,379.8px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+}
+@keyframes anim_2 {
+  0.00% { transform: translate(-50%, -50%) translate(-258px,485.1px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  6.94% { transform: translate(-50%, -50%) translate(236.399862558588px,485.1px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(236.4px,485.1px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+}
+@keyframes anim_3 {
+  0.00% { transform: translate(-50%, -50%) translate(-258px,590.4px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  6.99% { transform: translate(-50%, -50%) translate(236.399955126287px,590.4px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(236.4px,590.4px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+}
+@keyframes anim_4 {
+  0.00% { transform: translate(-50%, -50%) translate(-258px,695.7px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  7.04% { transform: translate(-50%, -50%) translate(236.399974759489px,695.7px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(236.4px,695.7px) scale(0.36,0.36) rotate(0deg); opacity: 1; }
+}
+@keyframes anim_7 {
+  0.00% { transform: translate(-50%, -50%) translate(2071.25px,843.125px) scale(0.3,0.3) rotate(0deg); opacity: 1; }
+  3.40% { transform: translate(-50%, -50%) translate(1670.25001993274px,843.125px) scale(0.3,0.3) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(1670.25px,843.125px) scale(0.3,0.3) rotate(0deg); opacity: 1; }
+}
+@keyframes anim_8 {
+  0.00% { transform: translate(-50%, -50%) translate(2071.25px,914.5px) scale(0.3,0.3) rotate(0deg); opacity: 1; }
+  3.42% { transform: translate(-50%, -50%) translate(1670.25024433305px,914.5px) scale(0.3,0.3) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(1670.25px,914.5px) scale(0.3,0.3) rotate(0deg); opacity: 1; }
+}
+@keyframes anim_9 {
+  0.00% { transform: translate(-50%, -50%) translate(1156px,1200px) scale(0.33,0.33) rotate(0deg); opacity: 1; }
+  3.55% { transform: translate(-50%, -50%) translate(1156px,884px) scale(0.33,0.33) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(1156px,884px) scale(0.33,0.33) rotate(0deg); opacity: 1; }
+}
+@keyframes anim_19 {
+  0.00% { transform: translate(-50%, -50%) translate(-309.5px,203.5px) scale(1,1) rotate(0deg); opacity: 1; }
+  6.67% { transform: translate(-50%, -50%) translate(296.5px,203.5px) scale(1,1) rotate(0deg); opacity: 1; }
+  100.00% { transform: translate(-50%, -50%) translate(296.5px,203.5px) scale(1,1) rotate(0deg); opacity: 1; }
+}
+</style></head><body>
+<div class='load-status' id='loadStatus'>正在加载资源...</div>
+<div id='container'>
+  <!-- 背景层 -->
+  <div class='blend-wrapper' id='background' style='width:100%;height:100%;background-color:#000;'></div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:1920px;height:1080px;'>
+    <img class='layer' src='assets/BG.png' style='width:100%;height:100%;left:960px; top:540px; transform:translate(-50%,-50%) scale(1,1); opacity:1;' alt='BG'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:1920px;height:1080px;'>
+    <img class='layer' src='assets/主视觉_歼10C.png' style='width:100%;height:100%;left:960px; top:540px; transform:translate(-50%,-50%) scale(1,1); opacity:1;' alt='主视觉_歼10C'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:800px;height:200px;'>
+    <img class='layer' src='assets/TEXT_歼-10C.png' style='width:100%;height:100%;animation: anim_19 6s linear 0s both;' alt='TEXT_歼-10C'>
+  </div>
+<style>@keyframes fadeIn_13 { 0% { opacity: 0; } 100% { opacity: 1; } }</style>
+  <!-- PAG图层 -->
+  <div class='blend-wrapper' data-blend-mode='screen' style='width:776px;height:509px;'>
+    <div class='layer' id='pag_container_13' data-anim-settings='{"loopMode":"loopRange","loop":true,"autoplay":true,"repeatCount":0,"range":{"hasRange":false,"rangeType":null,"start":0,"middle":0,"end":100,"isTwoPart":false}}' data-file-type='pag' style='width:100%;height:100%;animation: fadeIn_13 0.1s linear 0.01333333333333s both;left:1478px; top:887px; transform:translate(-50%,-50%) scale(0.4,0.4); opacity:0;'>
+      <canvas class='pag-canvas' id='pag_13' data-src='assets/Panel_Military_15_bmp.pag' data-in-point='0.01333333333333' style='width:100%;height:100%;'></canvas>
+    </div>
+  </div>
+  <!-- PAG图层 -->
+  <div class='blend-wrapper' data-blend-mode='screen' style='width:776px;height:509px;'>
+    <div class='layer' id='pag_container_12' data-anim-settings='{"loopMode":"loopRange","loop":true,"autoplay":true,"repeatCount":0,"range":{"hasRange":false,"rangeType":null,"start":0,"middle":0,"end":100,"isTwoPart":false}}' data-file-type='pag' style='width:100%;height:100%;left:1596px; top:207.5px; transform:translate(-50%,-50%) scale(0.55,0.55); opacity:1;'>
+      <canvas class='pag-canvas' id='pag_12' data-src='assets/Panel_Military_08_bmp.pag' data-in-point='-0.01333333333333' style='width:100%;height:100%;'></canvas>
+    </div>
+  </div>
+<style>@keyframes fadeIn_11 { 0% { opacity: 0; } 100% { opacity: 1; } }</style>
+  <!-- PAG图层 -->
+  <div class='blend-wrapper' data-blend-mode='screen' style='width:1000px;height:370px;'>
+    <div class='layer' id='pag_container_11' data-anim-settings='{"loopMode":"loopRange","loop":true,"autoplay":true,"repeatCount":0,"range":{"hasRange":false,"rangeType":null,"start":0,"middle":0,"end":100,"isTwoPart":false}}' data-file-type='pag' style='width:100%;height:100%;animation: fadeIn_11 0.1s linear 0.02s both;left:1613px; top:702px; transform:translate(-50%,-50%) scale(0.31,0.31); opacity:0;'>
+      <canvas class='pag-canvas' id='pag_11' data-src='assets/Panel_Military_02_bmp.pag' data-in-point='0.02' style='width:100%;height:100%;'></canvas>
+    </div>
+  </div>
+  <!-- PAG图层 -->
+  <div class='blend-wrapper' data-blend-mode='plus' style='width:2000px;height:1334px;'>
+    <div class='layer' id='pag_container_10' data-anim-settings='{"loopMode":"none","loop":false,"autoplay":true,"repeatCount":1}' data-file-type='pag' style='width:100%;height:100%;left:961px; top:534px; transform:translate(-50%,-50%) scale(1,1); opacity:0.5;'>
+      <canvas class='pag-canvas' id='pag_10' data-src='assets/Anima_Earth_bmp.pag' data-in-point='0' style='width:100%;height:100%;'></canvas>
+    </div>
+  </div>
+  <!-- Lottie图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:768px;height:735px;'>
+    <div class='layer' id='layer_9' data-anim-settings='{"loopMode":"none","loop":false,"autoplay":true,"repeatCount":1}' data-file-type='lottie' style='width:100%;height:100%;left:1619px; top:517px; transform:translate(-50%,-50%) scale(0.5,0.5); opacity:1;'>
+      <div class='lottie-wrapper' id='lottie_9' data-src='assets/Panel_性能参数歼10C.json' data-in-point='0'></div>
+    </div>
+  </div>
+  <!-- Lottie图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:2000px;height:800px;'>
+    <div class='layer' id='layer_8' data-anim-settings='{"loopMode":"none","loop":false,"autoplay":true,"repeatCount":1}' data-file-type='lottie' style='width:100%;height:100%;left:626px; top:963px; transform:translate(-50%,-50%) scale(0.5,0.5); opacity:1;'>
+      <div class='lottie-wrapper' id='lottie_8' data-src='assets/Panel_歼10c设计与技术亮点.json' data-in-point='0'></div>
+    </div>
+  </div>
+  <!-- Lottie图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:1920px;height:1080px;'>
+    <div class='layer' id='layer_7' data-anim-settings='{"loopMode":"none","loop":false,"autoplay":true,"repeatCount":1}' data-file-type='lottie' style='width:100%;height:100%;left:960px; top:540px; transform:translate(-50%,-50%) scale(1,1); opacity:1;'>
+      <div class='lottie-wrapper' id='lottie_7' data-src='assets/外框_bmp.json' data-in-point='0'></div>
+    </div>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:400px;height:600px;'>
+    <img class='layer' src='assets/B飞行员01_宋文骢.png' data-link='-01_1_01_1_swc.html' style='width:100%;height:100%;animation: anim_9 5.64s linear 0.36s both;' alt='B飞行员01_宋文骢'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:600px;height:250px;'>
+    <img class='layer' src='assets/Button_Back.png' data-link='-01_main.html' style='width:100%;height:100%;animation: anim_8 5.84s linear 0.16s both;' alt='Button_Back'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:600px;height:250px;'>
+    <img class='layer' src='assets/Button_Home.png' data-link='index.html' style='width:100%;height:100%;animation: anim_7 5.88s linear 0.12s both;' alt='Button_Home'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:800px;height:300px;'>
+    <img class='layer' src='assets/Button_歼-35A.png' data-link='-01_1_04_j35a.html' style='width:100%;height:100%;animation: anim_4 5.68s linear 0.32s both;' alt='Button_歼-35A'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:800px;height:300px;'>
+    <img class='layer' src='assets/Button_歼-20.png' data-link='-01_1_03_j20.html' style='width:100%;height:100%;animation: anim_3 5.72s linear 0.28s both;' alt='Button_歼-20'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:800px;height:300px;'>
+    <img class='layer' src='assets/Button_歼-16.png' data-link='-01_1_02_j16.html' style='width:100%;height:100%;animation: anim_2 5.76s linear 0.24s both;' alt='Button_歼-16'>
+  </div>
+  <!-- PNG图层 -->
+  <div class='blend-wrapper' data-blend-mode='normal' style='width:800px;height:300px;'>
+    <img class='layer' src='assets/Button_歼-10C.png' data-link='-01_1_01_j10c.html' style='width:100%;height:100%;animation: anim_1 5.8s linear 0.2s both;' alt='Button_歼-10C'>
+  </div>
+</div>
+<script>
+(function() {
+  // 基础缩放功能
+  var CW = 1920, CH = 1080;
+  var box = document.getElementById('container');
+  var loadStatus = document.getElementById('loadStatus');
+  function resize() {
+    var s = Math.min(window.innerWidth / CW, window.innerHeight / CH);
+    box.style.transform = 'scale(' + s + ')';
+  }
+  window.onresize = resize;
+  resize();
+  
+  // 页面加载完成后，显示所有图层 - 修复Opacity问题
+  window.addEventListener('load', function() {
+    // 确保所有图层在加载完成后变为可见
+    setTimeout(function() {
+      var layers = document.querySelectorAll('.layer');
+      layers.forEach(function(layer) {
+        if (layer.style.opacity === '0') {
+          layer.style.opacity = '1'; // 修复：使用显式的'1'而不是空字符串
+        }
+      });
+    }, 100);
+  });
+  // 智能库加载函数 - 优先本地，失败时使用CDN
+  function loadLibrary(src, libraryName, isLocal) {
+    return new Promise(function(resolve, reject) {
+      console.log('尝试加载 ' + (isLocal ? '本地' : 'CDN') + ' ' + libraryName + ' 库: ' + src);
+      loadStatus.textContent = '正在加载 ' + libraryName + ' 库 (' + (isLocal ? '本地' : 'CDN') + ')...';
+      var script = document.createElement('script');
+      script.src = src;
+      script.onload = function() {
+        console.log(libraryName + ' 库加载成功 (' + (isLocal ? '本地' : 'CDN') + ')');
+        loadStatus.textContent = libraryName + ' 库加载成功';
+        setTimeout(function() { loadStatus.textContent = ''; }, 1000);
+        resolve(true);
+      };
+      script.onerror = function() {
+        console.warn(libraryName + ' 库加载失败 (' + (isLocal ? '本地' : 'CDN') + '): ' + src);
+        reject(new Error('Failed to load ' + libraryName + ' library'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+  
+  // 智能加载动画库 - 优先本地，失败时使用CDN
+  function loadAnimationLibraries() {
+    var librariesToLoad = [];
+    
+    // PAG库加载策略：优先本地，备选CDN
+    librariesToLoad.push({
+      name: 'PAG',
+      localSrc: 'lib/libpag.min.js',
+      cdnSrc: 'https://cdn.jsdelivr.net/npm/libpag@4.2.36/lib/libpag.min.js',
+      required: true
+    });
+    // Lottie库加载策略：优先本地，备选CDN
+    librariesToLoad.push({
+      name: 'Lottie',
+      localSrc: 'lib/lottie.min.js',
+      cdnSrc: 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.0/lottie.min.js',
+      required: true
+    });
+    
+    // 依次尝试加载每个库
+    var loadPromises = [];
+    for (var i = 0; i < librariesToLoad.length; i++) {
+      (function(library) {
+        var promise = new Promise(function(resolve) {
+          // 首先尝试加载本地库
+          loadLibrary(library.localSrc, library.name, true)
+            .then(function(success) {
+              if (success) resolve(true);
+              else throw new Error('本地库加载失败');
+            })
+            .catch(function() {
+              // 本地加载失败，尝试CDN
+              console.log('本地' + library.name + '库加载失败，尝试CDN...');
+              loadStatus.textContent = '本地库加载失败，尝试CDN...';
+              loadLibrary(library.cdnSrc, library.name, false)
+                .then(function(success) {
+                  if (success) resolve(true);
+                  else resolve(false);
+                })
+                .catch(function() {
+                  console.error('所有' + library.name + '库源都加载失败');
+                  if (library.required) showLibraryError(library.name);
+                  resolve(false);
+                });
+            });
+        });
+        loadPromises.push(promise);
+      })(librariesToLoad[i]);
+    }
+    return Promise.allSettled(loadPromises);
+    }
+  function loadPAGAnimations() {
+    console.log('开始加载PAG动画...');
+    var pagContainers = document.querySelectorAll('[data-file-type="pag"]');
+    if (pagContainers.length === 0) {
+      console.log('没有找到PAG容器');
+      return;
+    }
+    console.log('找到' + pagContainers.length + '个PAG容器');
+    if (typeof window.libpag === 'undefined') {
+      console.error('PAG库未加载');
+      showLibraryError('PAG');
+      return;
+    }
+    window.libpag.PAGInit().then(function(PAG) {
+      console.log('PAG库初始化成功');
+      var promises = [];
+      for (var i = 0; i < pagContainers.length; i++) {
+        var container = pagContainers[i];
+        var canvas = container.querySelector('canvas[data-src]');
+        if (canvas) promises.push(loadPAGFile(PAG, canvas, container));
+      }
+      Promise.allSettled(promises).then(function(results) {
+        var successCount = 0, failCount = 0;
+        results.forEach(function(result, index) {
+          if (result.status === 'fulfilled' && result.value.success) successCount++;
+          else { failCount++; console.error('PAG文件加载失败:', result.reason || '未知错误'); }
+        });
+        console.log('PAG文件加载完成: ' + successCount + ' 个成功, ' + failCount + ' 个失败');
+        if (failCount > 0) console.warn('部分PAG文件加载失败，请检查文件是否存在且格式正确');
+      });
+    }).catch(function(e) {
+      console.error('PAG库初始化失败:', e);
+      showLibraryError('PAG');
+    });
+  }
+  
+  function loadPAGFile(PAG, canvas, container) {
+    return new Promise(function(resolve, reject) {
+      var src = canvas.getAttribute('data-src');
+      var inPoint = parseFloat(canvas.getAttribute('data-in-point')) || 0;
+      console.log('加载PAG文件:', src, '入点:', inPoint);
+      fetch(src, { method: 'HEAD' }).then(function(response) {
+        if (!response.ok) {
+          console.warn('PAG文件不存在或无法访问: ' + src);
+          showFileError(container, 'PAG文件不存在: ' + src);
+        }
+        return fetch(src);
+      }).then(function(response) {
+        if (!response.ok) throw new Error('HTTP错误: ' + response.status);
+        return response.arrayBuffer();
+      }).then(function(buffer) {
+        if (buffer.byteLength < 10) throw new Error('文件大小太小，可能不是有效的PAG文件');
+        return PAG.PAGFile.load(buffer);
+      }).then(function(pagFile) {
+        if (!pagFile) throw new Error('PAG文件加载失败: 返回的对象为空');
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+        return PAG.PAGView.init(pagFile, canvas).then(function(pagView) {
+          return { pagFile: pagFile, pagView: pagView };
+        });
+      }).then(function(result) {
+        var pagFile = result.pagFile;
+        var pagView = result.pagView;
+        // 获取动画设置
+        var animSettings = null;
+        try {
+          var settingsStr = container.getAttribute('data-anim-settings');
+          if (settingsStr) animSettings = JSON.parse(settingsStr);
+        } catch(e) {
+          console.warn('无法解析动画设置:', e);
+        }
+        
+        // 应用入点延迟
+        if (inPoint > 0) {
+          setTimeout(function() {
+            applyPAGAnimationSettings(pagView, pagFile, animSettings);
+          }, inPoint * 1000);
+        } else {
+          applyPAGAnimationSettings(pagView, pagFile, animSettings);
+        }
+        
+        resolve({ success: true, canvas: canvas, pagView: pagView });
+      }).catch(function(e) {
+        console.error('PAG文件加载失败:', src, e);
+        showFileError(container, 'PAG文件加载失败: ' + e.message);
+        resolve({ success: false, error: e });
+      });
+    });
+  }
+  
+  function applyPAGAnimationSettings(pagView, pagFile, animSettings) {
+    if (!animSettings) {
+      // 默认播放一次
+      pagView.setRepeatCount(1);
+      pagView.play();
+      return;
+    }
+    
+    console.log('应用PAG动画设置:', animSettings);
+    
+    // 根据动画设置应用不同的播放模式
+    switch(animSettings.loopMode) {
+      case 'none':
+        // 播放一次
+        pagView.setRepeatCount(1);
+        pagView.play();
+        break;
+      case 'loop':
+        // 全时长循环
+        pagView.setRepeatCount(0); // 0表示无限循环
+        pagView.play();
+        break;
+      case 'pingpong':
+        // 全时长弹跳循环
+        pagView.setRepeatCount(0);
+        // PAG需要自定义pingpong逻辑
+        setupPAGPingPong(pagView, 0, 100);
+        pagView.play();
+        break;
+      case 'loopRange':
+        if (animSettings.range) {
+          var range = animSettings.range;
+          if (range.isTwoPart) {
+            // 仅范围循环: loopRange(60-100)
+            var startProgress = range.start / 100;
+            var endProgress = range.end / 100;
+            pagView.setProgress(startProgress);
+            pagView.setRepeatCount(0);
+            // 设置范围循环需要自定义
+            setupPAGRangeLoop(pagView, startProgress, endProgress);
+          } else {
+            // 播放一次+循环: loopRange(0-60-100)
+            var firstEndProgress = range.middle / 100;
+            var loopStartProgress = range.middle / 100;
+            var loopEndProgress = range.end / 100;
+            // 先播放一次第一部分
+            pagView.setProgress(0);
+            pagView.play();
+            // 监听播放完成，然后开始循环第二部分
+            pagView.onAnimationEnd = function() {
+              pagView.setProgress(loopStartProgress);
+              pagView.setRepeatCount(0);
+              setupPAGRangeLoop(pagView, loopStartProgress, loopEndProgress);
+              pagView.play();
+            };
+          }
+        } else {
+          // 默认播放一次
+          pagView.setRepeatCount(1);
+          pagView.play();
+        }
+        break;
+      case 'pingpongRange':
+        if (animSettings.range) {
+          var range = animSettings.range;
+          if (range.isTwoPart) {
+            // 仅范围弹跳循环: pingpongRange(60-100)
+            var startProgress = range.start / 100;
+            var endProgress = range.end / 100;
+            pagView.setProgress(startProgress);
+            pagView.setRepeatCount(0);
+            setupPAGPingPong(pagView, startProgress, endProgress);
+            pagView.play();
+          } else {
+            // 播放一次+弹跳循环: pingpongRange(0-60-100)
+            var firstEndProgress = range.middle / 100;
+            var loopStartProgress = range.middle / 100;
+            var loopEndProgress = range.end / 100;
+            // 先播放一次第一部分
+            pagView.setProgress(0);
+            pagView.play();
+            // 监听播放完成，然后开始弹跳循环第二部分
+            pagView.onAnimationEnd = function() {
+              pagView.setProgress(loopStartProgress);
+              pagView.setRepeatCount(0);
+              setupPAGPingPong(pagView, loopStartProgress, loopEndProgress);
+              pagView.play();
+            };
+          }
+        } else {
+          // 默认播放一次
+          pagView.setRepeatCount(1);
+          pagView.play();
+        }
+        break;
+      default:
+        // 默认播放一次
+        pagView.setRepeatCount(1);
+        pagView.play();
+    }
+  }
+  
+  function setupPAGRangeLoop(pagView, startProgress, endProgress) {
+    // 设置PAG范围循环
+    var direction = 1;
+    var currentProgress = startProgress;
+    
+    var updateProgress = function() {
+      if (!pagView) return;
+      
+      currentProgress += 0.01 * direction;
+      
+      if (direction > 0 && currentProgress >= endProgress) {
+        currentProgress = startProgress;
+      } else if (direction < 0 && currentProgress <= startProgress) {
+        currentProgress = endProgress;
+      }
+      
+      pagView.setProgress(currentProgress);
+      
+      requestAnimationFrame(updateProgress);
+    };
+    
+    updateProgress();
+  }
+  
+  function setupPAGPingPong(pagView, startProgress, endProgress) {
+    // 设置PAG弹跳循环
+    var direction = 1;
+    var currentProgress = startProgress;
+    
+    var updateProgress = function() {
+      if (!pagView) return;
+      
+      currentProgress += 0.01 * direction;
+      
+      if (currentProgress >= endProgress) {
+        direction = -1;
+        currentProgress = endProgress;
+      } else if (currentProgress <= startProgress) {
+        direction = 1;
+        currentProgress = startProgress;
+      }
+      
+      pagView.setProgress(currentProgress);
+      
+      requestAnimationFrame(updateProgress);
+    };
+    
+    updateProgress();
+  }
+  function loadLottieAnimations() {
+    console.log('开始加载Lottie动画...');
+    if (typeof lottie === 'undefined') {
+      console.error('Lottie库未加载');
+      showLibraryError('Lottie');
+      return;
+    }
+    console.log('Lottie库已加载');
+    var lottieWrappers = document.querySelectorAll('.lottie-wrapper[data-src]');
+    console.log('找到' + lottieWrappers.length + '个Lottie容器');
+    var loadPromises = [];
+    for (var j = 0; j < lottieWrappers.length; j++) {
+      (function(wrapper) {
+        var promise = new Promise(function(resolve, reject) {
+          try {
+            var jsonPath = wrapper.getAttribute('data-src');
+            var inPoint = parseFloat(wrapper.getAttribute('data-in-point')) || 0;
+            console.log('加载Lottie文件:', jsonPath, '入点:', inPoint);
+            fetch(jsonPath, { method: 'HEAD' }).then(function(response) {
+              if (!response.ok) {
+                console.warn('Lottie文件不存在或无法访问: ' + jsonPath);
+                showFileError(wrapper.parentElement, 'Lottie文件不存在: ' + jsonPath);
+              }
+              return fetch(jsonPath);
+            }).then(function(response) {
+              if (!response.ok) throw new Error('无法加载Lottie文件，HTTP状态: ' + response.status);
+              return response.json();
+            }).then(function(animationData) {
+              if (!animationData) throw new Error('Lottie数据为空');
+              // 修复图片资源路径
+              if (animationData.assets) {
+                for (var k = 0; k < animationData.assets.length; k++) {
+                  var asset = animationData.assets[k];
+                  if (asset.p && asset.u) {
+                    // 确保资源路径正确
+                    if (asset.u === '' || asset.u === './') {
+                      asset.u = 'assets/images/';
+                    } else if (!asset.u.startsWith('http') && !asset.u.startsWith('/')) {
+                      asset.u = 'assets/images/' + asset.u;
+                    }
+                  }
+                }
+              }
+              var container = document.createElement('div');
+              container.className = 'lottie-container';
+              wrapper.appendChild(container);
+              var animSettings = null;
+              try {
+                var parentLayer = wrapper.closest('[data-anim-settings]');
+                if (parentLayer) {
+                  var settingsStr = parentLayer.getAttribute('data-anim-settings');
+                  if (settingsStr) animSettings = JSON.parse(settingsStr);
+                }
+              } catch(e) { console.warn('无法解析动画设置:', e); }
+              
+              var anim = lottie.loadAnimation({
+                container: container,
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                animationData: animationData,
+                assetsPath: 'assets/images/'
+              });
+              anim.addEventListener('DOMLoaded', function() {
+                console.log('Lottie动画DOM加载完成:', jsonPath);
+                
+                // 应用入点延迟
+                if (inPoint > 0) {
+                  setTimeout(function() {
+                    applyLottieAnimationSettings(anim, animSettings);
+                  }, inPoint * 1000);
+                } else {
+                  applyLottieAnimationSettings(anim, animSettings);
+                }
+                
+                resolve({ success: true, anim: anim });
+              });
+              anim.addEventListener('data_failed', function(e) {
+                console.error('Lottie数据加载失败:', jsonPath, e);
+                showFileError(wrapper.parentElement, 'Lottie数据加载失败');
+                resolve({ success: false, error: e });
+              });
+              setTimeout(function() {
+                if (anim.isLoaded === undefined || !anim.isLoaded) {
+                  console.warn('Lottie加载超时:', jsonPath);
+                }
+              }, 10000);
+            }).catch(function(e) {
+              console.error('Lottie加载失败:', jsonPath, e);
+              showFileError(wrapper.parentElement, 'Lottie加载失败: ' + e.message);
+              resolve({ success: false, error: e });
+            });
+          } catch(e) { 
+            console.error('Lottie加载异常:', e);
+            resolve({ success: false, error: e });
+          }
+        });
+        loadPromises.push(promise);
+      })(lottieWrappers[j]);
+    }
+    Promise.allSettled(loadPromises).then(function(results) {
+      var successCount = 0, failCount = 0;
+      results.forEach(function(result, index) {
+        if (result.status === 'fulfilled' && result.value.success) successCount++;
+        else { failCount++; console.error('Lottie文件加载失败:', result.reason || '未知错误'); }
+      });
+      console.log('Lottie文件加载完成: ' + successCount + ' 个成功, ' + failCount + ' 个失败');
+    });
+  }
+  
+  function applyLottieAnimationSettings(anim, animSettings) {
+    if (!animSettings) {
+      // 默认播放一次
+      anim.loop = false;
+      anim.play();
+      return;
+    }
+    
+    console.log('应用Lottie动画设置:', animSettings);
+    
+    // 根据动画设置应用不同的播放模式
+    switch(animSettings.loopMode) {
+      case 'none':
+        // 播放一次
+        anim.loop = false;
+        anim.play();
+        break;
+      case 'loop':
+        // 全时长循环
+        anim.loop = true;
+        anim.play();
+        break;
+      case 'pingpong':
+        // 全时长弹跳循环
+        anim.loop = false;
+        var direction = 1;
+        anim.setDirection(direction);
+        anim.play();
+        
+        // 监听动画完成事件，实现pingpong
+        anim.addEventListener('complete', function() {
+          direction = direction === 1 ? -1 : 1;
+          anim.setDirection(direction);
+          anim.play();
+        });
+        break;
+      case 'loopRange':
+        if (animSettings.range) {
+          var range = animSettings.range;
+          if (range.isTwoPart) {
+            // 仅范围循环: loopRange(60-100)
+            var startFrame = Math.floor(anim.totalFrames * range.start / 100);
+            var endFrame = Math.floor(anim.totalFrames * range.end / 100);
+            anim.loop = true;
+            anim.playSegments([startFrame, endFrame], true);
+          } else {
+            // 播放一次+循环: loopRange(0-60-100)
+            var firstEndFrame = Math.floor(anim.totalFrames * range.middle / 100);
+            var loopStartFrame = Math.floor(anim.totalFrames * range.middle / 100);
+            var loopEndFrame = Math.floor(anim.totalFrames * range.end / 100);
+            
+            // 先播放一次第一部分
+            anim.playSegments([0, firstEndFrame], true);
+            
+            // 监听播放完成，然后开始循环第二部分
+            anim.addEventListener('complete', function onFirstPartComplete() {
+              anim.removeEventListener('complete', onFirstPartComplete);
+              anim.loop = true;
+              anim.playSegments([loopStartFrame, loopEndFrame], true);
+            });
+          }
+        } else {
+          // 默认播放一次
+          anim.loop = false;
+          anim.play();
+        }
+        break;
+      case 'pingpongRange':
+        if (animSettings.range) {
+          var range = animSettings.range;
+          if (range.isTwoPart) {
+            // 仅范围弹跳循环: pingpongRange(60-100)
+            var startFrame = Math.floor(anim.totalFrames * range.start / 100);
+            var endFrame = Math.floor(anim.totalFrames * range.end / 100);
+            anim.loop = false;
+            var direction = 1;
+            anim.playSegments([startFrame, endFrame], true);
+            
+            // 监听动画完成事件，实现pingpong
+            anim.addEventListener('complete', function() {
+              direction = direction === 1 ? -1 : 1;
+              anim.setDirection(direction);
+              anim.playSegments([startFrame, endFrame], true);
+            });
+          } else {
+            // 播放一次+弹跳循环: pingpongRange(0-60-100)
+            var firstEndFrame = Math.floor(anim.totalFrames * range.middle / 100);
+            var loopStartFrame = Math.floor(anim.totalFrames * range.middle / 100);
+            var loopEndFrame = Math.floor(anim.totalFrames * range.end / 100);
+            
+            // 先播放一次第一部分
+            anim.playSegments([0, firstEndFrame], true);
+            
+            // 监听播放完成，然后开始弹跳循环第二部分
+            anim.addEventListener('complete', function onFirstPartComplete() {
+              anim.removeEventListener('complete', onFirstPartComplete);
+              anim.loop = false;
+              var direction = 1;
+              anim.playSegments([loopStartFrame, loopEndFrame], true);
+              
+              // 监听动画完成事件，实现pingpong
+              anim.addEventListener('complete', function() {
+                direction = direction === 1 ? -1 : 1;
+                anim.setDirection(direction);
+                anim.playSegments([loopStartFrame, loopEndFrame], true);
+              });
+            });
+          }
+        } else {
+          // 默认播放一次
+          anim.loop = false;
+          anim.play();
+        }
+        break;
+      default:
+        // 默认播放一次
+        anim.loop = false;
+        anim.play();
+    }
+  }
+  function showFileError(container, message) {
+    var existingError = container.querySelector('.file-error');
+    if (existingError) existingError.remove();
+    var errorDiv = document.createElement('div');
+    errorDiv.className = 'file-error';
+    errorDiv.innerHTML = '<h4>文件加载失败</h4>' +
+                        '<p>' + message + '</p>' +
+                        '<p>请检查文件是否存在且路径正确</p>' +
+                        '<p>或使用正确的导出插件重新导出</p>';
+    if (container) container.appendChild(errorDiv);
+  }
+  
+  function showLibraryError(libName) {
+    var containers = document.querySelectorAll('[data-file-type]');
+    for (var i = 0; i < containers.length; i++) {
+      var container = containers[i];
+      var fileType = container.getAttribute('data-file-type');
+      if (fileType === libName.toLowerCase()) showFileError(container, libName + '库未加载或加载失败');
+    }
+  }
+  window.addEventListener('load', function() {
+    console.log('页面加载完成，开始初始化动画...');
+    loadStatus.textContent = '正在初始化...';
+    loadAnimationLibraries().then(function(results) {
+      console.log('所有库加载完成');
+      loadStatus.textContent = '库加载完成，开始加载动画...';
+      setTimeout(function() {
+        loadPAGAnimations();
+        loadLottieAnimations();
+        loadStatus.textContent = '动画加载完成';
+        setTimeout(function() { loadStatus.textContent = ''; }, 2000);
+        console.log('动画初始化完成');
+      }, 500);
+    }).catch(function(e) {
+      console.error('库加载失败:', e);
+      loadStatus.textContent = '库加载失败，请检查网络或本地库文件';
+    });
+  });
+  document.addEventListener('click', function(e) {
+    var target = e.target;
+    var layer = target.closest('.layer[data-link]');
+    if (layer) {
+      e.stopPropagation();
+      var link = layer.getAttribute('data-link');
+      if (link && link.trim() !== '') {
+        if (link === '../') {
+          // 返回上一级目录
+          var currentPath = window.location.pathname;
+          var parentPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+          if (parentPath === '') parentPath = '/';
+          window.location.href = parentPath;
+        } else {
+          window.location.href = link;
+        }
+      }
+    }
+  });
+})();
+</script></body></html>
